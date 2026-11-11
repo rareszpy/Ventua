@@ -7,16 +7,16 @@
 <meta name="description" content="Notes, tasks, calendar and habits in one place, where everything lives on a day.">
 <meta name="theme-color" content="#0C0C0E" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#F6F6F7" media="(prefers-color-scheme: light)">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%279%27 fill=%27%23111113%27/%3E%3Cpath d=%27M10 10.5l6 11%27 stroke=%27%23fff%27 stroke-width=%273.4%27 stroke-linecap=%27round%27/%3E%3Cpath d=%27M16 21.5l6-11%27 stroke=%27%23F25C2A%27 stroke-width=%273.4%27 stroke-linecap=%27round%27/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%279%27 fill=%27%23111113%27/%3E%3Cpath d=%27M10 10.5l6 11%27 stroke=%27%23fff%27 stroke-width=%273.4%27 stroke-linecap=%27round%27/%3E%3Cpath d=%27M16 21.5l6-11%27 stroke=%27%232F6BFF%27 stroke-width=%273.4%27 stroke-linecap=%27round%27/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&family=Geist+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: app shell. A floating sidebar, and a main column whose home is the day: a note beside its
-   schedule. Cool neutrals, one bright tangerine accent, Geist throughout with mono labels. */
+   schedule. Cool neutrals, one bright blue accent (orange, green, pink as options), Geist throughout with mono labels. */
 :root {
   --bg: #F6F6F7; --panel: #EFEFF1; --surface: #FFFFFF; --ink: #111113; --muted: #686872; --faint: #A1A1AA;
-  --line: #E4E4E7; --accent: #F25C2A; --accent-ink: #CF4317; --accent-soft: rgba(242,92,42,.11); --on-accent: #FFFFFF;
+  --line: #E4E4E7; --accent: #2F6BFF; --accent-ink: #1F55E0; --accent-soft: rgba(47,107,255,.11); --on-accent: #FFFFFF;
   --ev: color-mix(in srgb, var(--accent) 11%, var(--surface)); --ev-line: var(--accent); --danger: #DC2626; --good: #16A34A;
   --shadow: 0 12px 32px -12px rgba(17,17,19,.22);
   --display: "Geist", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -25,21 +25,21 @@
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
   --bg: #0C0C0E; --panel: #131316; --surface: #19191D; --ink: #F4F4F5; --muted: #A1A1AA; --faint: #62626B;
-  --line: #27272C; --accent: #FF7A45; --accent-ink: #FF946A; --accent-soft: rgba(255,122,69,.14); --on-accent: #0C0C0E;
+  --line: #27272C; --accent: #6F98FF; --accent-ink: #8CADFF; --accent-soft: rgba(111,152,255,.15); --on-accent: #0C0C0E;
   --danger: #F87171; --good: #4ADE80; --shadow: 0 16px 40px -14px rgba(0,0,0,.75); color-scheme: dark } }
 :root[data-theme="dark"] {
   --bg: #0C0C0E; --panel: #131316; --surface: #19191D; --ink: #F4F4F5; --muted: #A1A1AA; --faint: #62626B;
-  --line: #27272C; --accent: #FF7A45; --accent-ink: #FF946A; --accent-soft: rgba(255,122,69,.14); --on-accent: #0C0C0E;
+  --line: #27272C; --accent: #6F98FF; --accent-ink: #8CADFF; --accent-soft: rgba(111,152,255,.15); --on-accent: #0C0C0E;
   --danger: #F87171; --good: #4ADE80; --shadow: 0 16px 40px -14px rgba(0,0,0,.75); color-scheme: dark }
 
-:root[data-accent="blue"] { --accent: #2F6BFF; --accent-ink: #1F55E0; --accent-soft: rgba(47,107,255,.11) }
+:root[data-accent="orange"] { --accent: #F25C2A; --accent-ink: #CF4317; --accent-soft: rgba(242,92,42,.11) }
 :root[data-accent="green"] { --accent: #12A150; --accent-ink: #0D8541; --accent-soft: rgba(18,161,80,.12) }
 :root[data-accent="pink"] { --accent: #E5397A; --accent-ink: #C42563; --accent-soft: rgba(229,57,122,.11) }
 @media (prefers-color-scheme: dark) {
-  :root[data-accent="blue"]:not([data-theme="light"]) { --accent: #6F98FF; --accent-ink: #8CADFF; --accent-soft: rgba(111,152,255,.15) }
+  :root[data-accent="orange"]:not([data-theme="light"]) { --accent: #FF7A45; --accent-ink: #FF946A; --accent-soft: rgba(255,122,69,.14) }
   :root[data-accent="green"]:not([data-theme="light"]) { --accent: #3DD68C; --accent-ink: #5FE3A2; --accent-soft: rgba(61,214,140,.14) }
   :root[data-accent="pink"]:not([data-theme="light"]) { --accent: #FF6FA3; --accent-ink: #FF8DB6; --accent-soft: rgba(255,111,163,.15) } }
-:root[data-theme="dark"][data-accent="blue"] { --accent: #6F98FF; --accent-ink: #8CADFF; --accent-soft: rgba(111,152,255,.15) }
+:root[data-theme="dark"][data-accent="orange"] { --accent: #FF7A45; --accent-ink: #FF946A; --accent-soft: rgba(255,122,69,.14) }
 :root[data-theme="dark"][data-accent="green"] { --accent: #3DD68C; --accent-ink: #5FE3A2; --accent-soft: rgba(61,214,140,.14) }
 :root[data-theme="dark"][data-accent="pink"] { --accent: #FF6FA3; --accent-ink: #FF8DB6; --accent-soft: rgba(255,111,163,.15) }
 
@@ -347,6 +347,10 @@ code { font: 13px ui-monospace, "SF Mono", Menlo, monospace; background: var(--p
 .card h3 .acts { display: flex; gap: 14px }
 .ai-btn { border: 1px solid color-mix(in srgb, var(--accent) 50%, var(--line)); background: var(--accent-soft); color: var(--accent-ink); border-radius: 8px; padding: 6px 12px; font-size: 13px; font-weight: 700 }
 
+.exbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 12px 14px; margin-bottom: 26px; border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--line)); background: var(--accent-soft); border-radius: 14px; font-size: 14px }
+.exbar .sp { flex: 1 }
+.exbar b { color: var(--accent-ink) }
+
 /* ---------- accounts ---------- */
 .auth { width: min(400px, 100%); display: grid; gap: 6px; padding: 26px 24px 20px }
 .auth .mark { width: 36px; height: 36px; margin-bottom: 6px }
@@ -540,6 +544,7 @@ function sample() {
     if (i === 1) days[D(0)] = 1;
     habits[id] = { id, name, days, order: i, created: now(), updated: now() };
   });
+  for (const coll of [pages, events, habits]) for (const o of Object.values(coll)) o.ex = 1;
   return { pages, events, habits, touched: false, version: 1 };
 }
 
@@ -1152,6 +1157,45 @@ function renderMain() {
   if (r.v === "settings") return viewSettings(main);
 }
 
+// ---------- example content ----------
+// New installs flag examples with `ex`. Older saves have no flag, so they're recognised by exact content.
+let _sig = null;
+const noChips = h => txtOf((h || "").replace(/<a class="chip"[^>]*>[^<]*<\/a>/g, "")).replace(/\s+/g, " ").trim();
+function sampleSig() {
+  if (_sig) return _sig;
+  const s0 = sample(), dayTexts = new Set();
+  Object.values(s0.pages).filter(p => p.kind === "day").forEach(p => p.blocks.forEach(b => { const t = noChips(b.h); if (t) dayTexts.add(t); }));
+  return (_sig = { dayTexts, ev: new Set(Object.values(s0.events).map(e => `${e.title}|${e.start}|${e.end}`)), hb: new Set(Object.values(s0.habits).map(h => h.name)) });
+}
+function isExample(kind, o) {
+  const sig = sampleSig();
+  if (kind === "page") {
+    if (o.kind !== "day") return !!o.ex || ["welcome", "launch", "ideas"].includes(o.id);
+    const texts = (o.blocks || []).map(b => noChips(b.h)).filter(Boolean);
+    return texts.length > 0 && texts.every(t => sig.dayTexts.has(t));
+  }
+  if (o.ex) return true;
+  if (kind === "event") return sig.ev.has(`${o.title}|${o.start}|${o.end}`);
+  return sig.hb.has(o.name);
+}
+function exampleItems() { const out = []; for (const [k, coll] of Object.entries(COLL)) for (const o of Object.values(state[coll])) if (isExample(k, o)) out.push([k, o]); return out; }
+// Day pages that mix example lines with your own writing keep your lines.
+function mixedDays() {
+  const sig = sampleSig();
+  return Object.values(state.pages).filter(p => p.kind === "day" && !isExample("page", p) && (p.blocks || []).some(b => sig.dayTexts.has(noChips(b.h))));
+}
+function exampleCount() { return exampleItems().length + mixedDays().length; }
+function clearExamples() {
+  flushEditor(); editing = null;
+  const items = exampleItems(), mixed = mixedDays(); if (!items.length && !mixed.length) return;
+  const sig = sampleSig();
+  const copies = [...items, ...mixed.map(p => ["page", p])].map(([k, o]) => [k, JSON.parse(JSON.stringify(o))]);
+  items.forEach(([k, o]) => Store.remove(k, o.id));
+  mixed.forEach(p => { const q = JSON.parse(JSON.stringify(p)); q.blocks = q.blocks.filter(b => !sig.dayTexts.has(noChips(b.h))); delete q.ex; Store.put("page", q); });
+  render();
+  toast(`Removed ${items.length} examples. Everything you wrote is still here.`, { label: "Undo", run: () => { copies.forEach(([k, o]) => Store.put(k, o)); render(); } });
+}
+
 // ---------- day view ----------
 function viewDay(main, date) {
   const key = ymd(date), I = ix(), t = today(), isToday = sameDay(date, t);
@@ -1160,7 +1204,9 @@ function viewDay(main, date) {
   const wk = startOfWeek(date);
   const weekHtml = Array.from({ length: 7 }, (_, i) => { const d = addDays(wk, i), k = ymd(d);
     return `<a href="#day-${compact(d)}" class="${k === key ? "on" : ""} ${sameDay(d, t) ? "today" : ""}" aria-label="${fmtLong(d)}">${"MTWTFSS"[i]}<b>${d.getDate()}</b><i class="${dayScore(k) ? "has" : ""}"></i></a>`; }).join("");
+  const exN = lsGet("ventua:ex-banner") === "hidden" ? 0 : exampleCount();
   main.innerHTML = `<div class="view">
+    ${exN ? `<div class="exbar" role="note"><span><b>These are examples</b> to show you around: sample pages, tasks, events and habits.</span><span class="sp"></span><button class="btn" type="button" id="ex-keep">Keep them for now</button><button class="btn primary" type="button" id="ex-clear">Start fresh</button></div>` : ""}
     <header class="dayhead">
       <div>
         <div class="eyebrow meta">${isToday ? ["Good night", "Good morning", "Good afternoon", "Good evening"][Math.floor(((new Date().getHours() + 1) % 24) / 6)] : relDay(date)} · Week ${isoWeek(date)}</div>
@@ -1193,6 +1239,8 @@ function viewDay(main, date) {
   const nowMin = new Date().getHours() * 60 + new Date().getMinutes();
   tlw.scrollTop = Math.max(0, ((isToday ? nowMin - 90 : firstEv ? firstEv.start - 45 : 7.5 * 60) / 60) * 44);
   const ap = $("#ai-plan"); if (ap) ap.onclick = () => planDay(key);
+  const exc = $("#ex-clear"); if (exc) exc.onclick = clearExamples;
+  const exk = $("#ex-keep"); if (exk) exk.onclick = () => { lsSet("ventua:ex-banner", "hidden"); const bar = $(".exbar"); bar && bar.remove(); toast("You can remove the examples later in Settings."); };
   $("#add-ev").onclick = () => { const s = isToday ? Math.min(23 * 60, Math.ceil(nowMin / 30) * 30) : 9 * 60; createEvent(key, s); };
 }
 
@@ -1464,11 +1512,11 @@ function viewHabits(main) {
 }
 
 // ---------- settings ----------
-const ACCENTS = [["tangerine", "#F25C2A", "Tangerine"], ["blue", "#2F6BFF", "Blue"], ["green", "#12A150", "Green"], ["pink", "#E5397A", "Pink"]];
+const ACCENTS = [["blue", "#2F6BFF", "Blue"], ["green", "#12A150", "Green"], ["pink", "#E5397A", "Pink"], ["orange", "#F25C2A", "Orange"]];
 function viewSettings(main) {
-  const th = lsGet("ventua:theme") || "system", ac = ACCENTS.some(a => a[0] === lsGet("ventua:accent")) ? lsGet("ventua:accent") : "tangerine";
+  const th = lsGet("ventua:theme") || "system", ac = accentPref();
   const counts = { pages: Object.values(state.pages).filter(p => p.kind === "page").length, days: Object.values(state.pages).filter(p => p.kind === "day").length, events: Object.keys(state.events).length, habits: Object.keys(state.habits).length };
-  const aiState = !AI ? "Available when you open Ventua inside Claude." : aiBlocked ? "AI wasn't allowed for Ventua. Allow it from this app's permissions to turn it back on." : "Plan my day, weekly reviews, and AI writing in any note (type /ai). Uses your own Claude account.";
+  const aiState = !AI ? (inClaude() ? "AI isn't available in this view." : "Coming soon with Ventua Pro: plan your day, weekly reviews, and AI writing in any note.") : aiBlocked ? "AI wasn't allowed for Ventua. Allow it from this app's permissions to turn it back on." : "Plan my day, weekly reviews, and AI writing in any note (type /ai). Uses your own Claude account.";
   main.innerHTML = `<div class="view"><div class="vhead"><h1 class="display">Settings</h1></div><div class="set">
     <section><h2>Appearance</h2><p class="desc">Saved on this device.</p>
       <div class="themes" role="radiogroup" aria-label="Theme">
@@ -1477,7 +1525,7 @@ function viewSettings(main) {
       <p class="desc" style="margin:22px 0 10px">Accent colour</p>
       <div class="accents" role="radiogroup" aria-label="Accent colour">${ACCENTS.map(([v, c, l]) => `<button type="button" class="sw${ac === v ? " on" : ""}" data-accent-pick="${v}" style="background:${c}" role="radio" aria-checked="${ac === v}" aria-label="${l}" title="${l}"></button>`).join("")}</div>
     </section>
-    <section><h2>AI</h2><p class="desc">Optional. Nothing is sent to AI until you click an AI button.</p>
+    <section><h2>AI</h2><p class="desc">${AI ? "Optional. Nothing is sent to AI until you click an AI button." : "Optional, and off until it's available."}</p>
       <div class="srow"><div><b>AI features</b><span class="m">${esc(aiState)}</span></div><button type="button" class="switch" id="ai-switch" role="switch" aria-label="AI features" aria-checked="${aiReady()}" ${!AI || aiBlocked ? "disabled" : ""}></button></div>
     </section>
     ${!inClaude() ? `<section><h2>Account</h2><p class="desc">${SB.user ? "Signed in. Your notes back up and sync to every device automatically." : "Create a free account to back up your notes and use Ventua on all your devices."}</p>
@@ -1486,6 +1534,7 @@ function viewSettings(main) {
         : `<div><b>Accounts unavailable</b><span class="m">Couldn't load sign-in. Check your connection and reload.</span></div>`}</div></section>` : ""}
     <section><h2>Sync &amp; data</h2><p class="desc">${Store.col ? "Synced to your Claude account. Only you can see it, on any device where you open Ventua." : Store.sb ? "Synced to your Ventua account. Only you can see it." : "Saved in this browser."}</p>
       <div class="srow"><div><b>Your data</b><span class="m">${counts.pages} pages, ${counts.days} daily notes, ${counts.events} events, ${counts.habits} habits</span></div><span style="display:flex;gap:8px"><button class="btn" type="button" id="s-export">Export</button><button class="btn" type="button" id="s-import">Import</button></span></div>
+      ${(() => { const n = exampleCount(); return n ? `<div class="srow"><div><b>Example content</b><span class="m">${n} example items: the Welcome page, sample tasks, events and habits. Anything you wrote stays.</span></div><button class="btn" type="button" id="s-ex">Remove examples</button></div>` : ""; })()}
       <div class="srow"><div><b>Delete everything</b><span class="m">Removes all pages, notes, events and habits${Store.col || Store.sb ? " from every device" : ""}. Export first if you want a copy.</span></div><span id="wipe-wrap"><button class="btn danger" type="button" id="s-wipe">Delete all data</button></span></div>
     </section>
     <section><h2>Keyboard shortcuts</h2><div class="kbds">
@@ -1503,6 +1552,7 @@ function viewSettings(main) {
   const so = $("#s-out"); if (so) so.onclick = signOut;
   const si = $("#s-in"); if (si) si.onclick = () => openAuth("signin");
   const su = $("#s-up"); if (su) su.onclick = () => openAuth("signup");
+  const sx = $("#s-ex"); if (sx) sx.onclick = () => { clearExamples(); go("preferences"); };
   $("#s-export").onclick = exportData; $("#s-import").onclick = () => $("#import-file").click();
   $("#s-wipe").onclick = () => {
     $("#wipe-wrap").innerHTML = `<span style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="muted" style="font-size:13px">This can't be undone.</span><button class="btn danger" type="button" id="wipe-yes">Delete everything</button><button class="btn" type="button" id="wipe-no">Cancel</button></span>`;
@@ -1571,9 +1621,11 @@ function paletteItems(q) {
 
 // ---------- theme, export, misc ----------
 const hostTheme = document.documentElement.getAttribute("data-theme");
+// Blue is the default. Someone who picked the old default "tangerine" keeps orange.
+function accentPref() { const v = lsGet("ventua:accent"); return v === "tangerine" ? "orange" : ACCENTS.some(a => a[0] === v) ? v : "blue"; }
 function applyTheme() {
-  const ac = lsGet("ventua:accent");
-  if (["blue", "green", "pink"].includes(ac)) document.documentElement.setAttribute("data-accent", ac); else document.documentElement.removeAttribute("data-accent");
+  const ac = accentPref();
+  if (ac !== "blue") document.documentElement.setAttribute("data-accent", ac); else document.documentElement.removeAttribute("data-accent");
   const v = lsGet("ventua:theme") || "system";
   if (v === "system") { if (hostTheme) document.documentElement.setAttribute("data-theme", hostTheme); else document.documentElement.removeAttribute("data-theme"); }
   else document.documentElement.setAttribute("data-theme", v);
