@@ -1,0 +1,23 @@
+{
+  "id": "/",
+  "name": "Ventua",
+  "short_name": "Ventua",
+  "description": "Notes, tasks, calendar and habits, where everything lives on a day.",
+  "start_url": "/?source=app",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#F6F6F7",
+  "theme_color": "#F6F6F7",
+  "categories": ["productivity", "lifestyle"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Today", "url": "/?source=app#today", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Tasks", "url": "/?source=app#tasks", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Calendar", "url": "/?source=app#calendar", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

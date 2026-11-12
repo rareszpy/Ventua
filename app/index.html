@@ -351,6 +351,17 @@ code { font: 13px ui-monospace, "SF Mono", Menlo, monospace; background: var(--p
 .exbar .sp { flex: 1 }
 .exbar b { color: var(--accent-ink) }
 
+.instbar img { border-radius: 9px; flex: none }
+.getapp { border: 0; background: var(--accent); color: var(--on-accent); border-radius: 999px; padding: 6px 12px; font-size: 13px; font-weight: 700 }
+.install { width: min(440px, 100%); text-align: left }
+.install .appicon { border-radius: 16px; box-shadow: var(--shadow); margin-bottom: 8px }
+.install h2 { margin: 4px 0 2px }
+.isteps { list-style: none; padding: 0; margin: 18px 0 4px; display: grid; gap: 14px }
+.isteps li { display: grid; grid-template-columns: 24px 34px 1fr; gap: 10px; align-items: center; font-size: 14.5px; line-height: 1.45 }
+.isteps .n { width: 24px; height: 24px; border-radius: 50%; background: var(--accent-soft); color: var(--accent-ink); font: 700 12px var(--text); display: grid; place-items: center }
+.isteps .ic { width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); display: grid; place-items: center; color: var(--accent) }
+.isteps .ic .svg { width: 20px; height: 20px }
+
 /* ---------- accounts ---------- */
 .auth { width: min(400px, 100%); display: grid; gap: 6px; padding: 26px 24px 20px }
 .auth .mark { width: 36px; height: 36px; margin-bottom: 6px }
@@ -413,6 +424,7 @@ code { font: 13px ui-monospace, "SF Mono", Menlo, monospace; background: var(--p
     <div class="topbar">
       <button class="iconbtn" type="button" id="burger" aria-label="Open menu"><svg class="svg" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
       <b id="top-title">Ventua</b>
+      <span id="top-install"></span>
       <button class="iconbtn" type="button" id="top-search" aria-label="Search"><svg class="svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7.5"/><path d="M20.5 20.5l-4-4"/></svg></button>
     </div>
     <main id="main"></main>
@@ -1136,9 +1148,14 @@ function renderSide() {
   ];
   const navHtml = list => list.map(([h, ic, l, on, c]) => `<a href="#${h}" class="${on ? "on" : ""}"${on ? ' aria-current="page"' : ""}>${svg(ic)}${l}${c ? `<span class="count">${c}</span>` : ""}</a>`).join("");
   $("#nav").innerHTML = navHtml(nav);
-  $("#nav2").innerHTML = navHtml([["preferences", "settings", "Settings", r.v === "settings"]])
+  ICON.install = '<path d="M12 3.5v11M7.5 10l4.5 4.5 4.5-4.5"/><path d="M4.5 15.5v2a3 3 0 0 0 3 3h9a3 3 0 0 0 3-3v-2"/>';
+  $("#nav2").innerHTML = (installKind() ? `<a href="#" id="side-install">${svg("install")}Install app</a>` : "")
+    + navHtml([["preferences", "settings", "Settings", r.v === "settings"]])
     + (SB.ready && !SB.user ? `<button type="button" class="signin" id="side-signin"><span>Sync across devices</span><b>Sign in</b></button>` : "");
   const ssi = $("#side-signin"); if (ssi) ssi.onclick = () => openAuth("signin");
+  const sin = $("#side-install"); if (sin) sin.onclick = e => { e.preventDefault(); startInstall(); };
+  $("#top-install").innerHTML = installKind() ? `<button type="button" class="getapp" id="top-getapp">Get app</button>` : "";
+  const tga = $("#top-getapp"); if (tga) tga.onclick = startInstall;
   const pages = Object.values(state.pages).filter(p => p.kind === "page").sort((a, b) => (a.created || 0) - (b.created || 0));
   $("#plist").innerHTML = pages.map(p => `<a href="#page-${p.id}" class="${r.v === "page" && r.id === p.id ? "on" : ""}${p.title ? "" : " untitled"}">${svg("page")}<span>${esc(p.title || "Untitled")}</span></a>`).join("")
     || `<p class="empty-note" style="padding:4px 10px">No pages yet.</p>`;
@@ -1206,6 +1223,7 @@ function viewDay(main, date) {
     return `<a href="#day-${compact(d)}" class="${k === key ? "on" : ""} ${sameDay(d, t) ? "today" : ""}" aria-label="${fmtLong(d)}">${"MTWTFSS"[i]}<b>${d.getDate()}</b><i class="${dayScore(k) ? "has" : ""}"></i></a>`; }).join("");
   const exN = lsGet("ventua:ex-banner") === "hidden" ? 0 : exampleCount();
   main.innerHTML = `<div class="view">
+    ${exN ? "" : installBanner()}
     ${exN ? `<div class="exbar" role="note"><span><b>These are examples</b> to show you around: sample pages, tasks, events and habits.</span><span class="sp"></span><button class="btn" type="button" id="ex-keep">Keep them for now</button><button class="btn primary" type="button" id="ex-clear">Start fresh</button></div>` : ""}
     <header class="dayhead">
       <div>
@@ -1240,6 +1258,8 @@ function viewDay(main, date) {
   tlw.scrollTop = Math.max(0, ((isToday ? nowMin - 90 : firstEv ? firstEv.start - 45 : 7.5 * 60) / 60) * 44);
   const ap = $("#ai-plan"); if (ap) ap.onclick = () => planDay(key);
   const exc = $("#ex-clear"); if (exc) exc.onclick = clearExamples;
+  const ig = $("#inst-go"); if (ig) ig.onclick = startInstall;
+  const il = $("#inst-later"); if (il) il.onclick = () => { lsSet("ventua:install-hide", String(now())); const bar = $(".instbar"); bar && bar.remove(); toast("You can install Ventua any time from Settings."); };
   const exk = $("#ex-keep"); if (exk) exk.onclick = () => { lsSet("ventua:ex-banner", "hidden"); const bar = $(".exbar"); bar && bar.remove(); toast("You can remove the examples later in Settings."); };
   $("#add-ev").onclick = () => { const s = isToday ? Math.min(23 * 60, Math.ceil(nowMin / 30) * 30) : 9 * 60; createEvent(key, s); };
 }
@@ -1525,6 +1545,8 @@ function viewSettings(main) {
       <p class="desc" style="margin:22px 0 10px">Accent colour</p>
       <div class="accents" role="radiogroup" aria-label="Accent colour">${ACCENTS.map(([v, c, l]) => `<button type="button" class="sw${ac === v ? " on" : ""}" data-accent-pick="${v}" style="background:${c}" role="radio" aria-checked="${ac === v}" aria-label="${l}" title="${l}"></button>`).join("")}</div>
     </section>
+    ${!inClaude() ? `<section><h2>App</h2><p class="desc">${isStandalone() ? "You're using the installed Ventua app." : "Install Ventua so it opens like an app, full-screen and offline."}</p>
+      <div class="srow"><div><b>${isStandalone() ? "Installed" : installKind() ? "Install Ventua" : "Install on your phone"}</b><span class="m">${isStandalone() ? "Updates arrive automatically." : installKind() ? (isIOS() ? "Add it to your home screen in three taps." : "One click, and it's in your apps.") : "Open ventua.vercel.app on your phone or in Chrome, Edge or Safari to install it."}</span></div>${installKind() ? `<button class="btn primary" type="button" id="s-install">${installKind() === "prompt" ? "Install" : "Show me how"}</button>` : ""}</div></section>` : ""}
     <section><h2>AI</h2><p class="desc">${AI ? "Optional. Nothing is sent to AI until you click an AI button." : "Optional, and off until it's available."}</p>
       <div class="srow"><div><b>AI features</b><span class="m">${esc(aiState)}</span></div><button type="button" class="switch" id="ai-switch" role="switch" aria-label="AI features" aria-checked="${aiReady()}" ${!AI || aiBlocked ? "disabled" : ""}></button></div>
     </section>
@@ -1550,6 +1572,7 @@ function viewSettings(main) {
   };
   const sw = $("#ai-switch"); if (sw) sw.onclick = () => { aiOff = !aiOff; lsSet("ventua:ai", aiOff ? "off" : "on"); viewSettings(main); renderSide(); };
   const so = $("#s-out"); if (so) so.onclick = signOut;
+  const sinst = $("#s-install"); if (sinst) sinst.onclick = startInstall;
   const si = $("#s-in"); if (si) si.onclick = () => openAuth("signin");
   const su = $("#s-up"); if (su) su.onclick = () => openAuth("signup");
   const sx = $("#s-ex"); if (sx) sx.onclick = () => { clearExamples(); go("preferences"); };
@@ -1833,6 +1856,75 @@ function openAuth(mode = "signin") {
   };
 }
 
+// ---------- Installable app (PWA) + "how to install" guide ----------
+// Only on the public website: inside Claude the page can't be installed and the files below don't exist.
+const UA = navigator.userAgent;
+const isIOS = () => /iPhone|iPad|iPod/.test(UA) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const isStandalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const isMacSafari = () => !isIOS() && /Macintosh/.test(UA) && /Safari\//.test(UA) && !/Chrome|Chromium|Edg|Firefox|OPR/.test(UA);
+let installEvt = null;
+function installKind() {
+  if (inClaude() || isStandalone()) return null;
+  if (installEvt) return "prompt";
+  if (isIOS()) return "ios";
+  if (isMacSafari()) return "mac";
+  if (/Android/.test(UA)) return "android";
+  return null;
+}
+const installHidden = () => { const t = +(lsGet("ventua:install-hide") || 0); return t && now() - t < 14 * 864e5; };
+function initPWA() {
+  if (inClaude()) return;
+  const head = document.head, add = (tag, attrs) => { const el = document.createElement(tag); for (const k in attrs) el.setAttribute(k, attrs[k]); head.appendChild(el); };
+  add("link", { rel: "manifest", href: "manifest.webmanifest" });
+  add("link", { rel: "apple-touch-icon", href: "icons/apple-touch-icon.png" });
+  add("meta", { name: "apple-mobile-web-app-capable", content: "yes" });
+  add("meta", { name: "mobile-web-app-capable", content: "yes" });
+  add("meta", { name: "apple-mobile-web-app-title", content: "Ventua" });
+  add("meta", { name: "apple-mobile-web-app-status-bar-style", content: "default" });
+  if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) navigator.serviceWorker.register("sw.js").catch(() => {});
+  addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; refreshInstall(); });
+  addEventListener("appinstalled", () => { installEvt = null; toast("Ventua is installed. Open it from your home screen or apps."); refreshInstall(); });
+}
+function refreshInstall() { renderSide(); const r = route(); if ((r.v === "day" || r.v === "settings") && !$(".scrim")) softRender(); }
+async function startInstall() {
+  const k = installKind();
+  if (k === "prompt") {
+    const e = installEvt; installEvt = null;
+    try { e.prompt(); const c = await e.userChoice; if (c && c.outcome !== "accepted") installEvt = e; } catch {}
+    refreshInstall(); return;
+  }
+  openInstallHelp(k);
+}
+const SHARE_ICO = '<svg class="svg" viewBox="0 0 24 24"><path d="M12 3v12M8 7l4-4 4 4"/><path d="M6 11H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-1"/></svg>';
+const ADD_ICO = '<svg class="svg" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M12 8v8M8 12h8"/></svg>';
+const MENU_ICO = '<svg class="svg" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="12" cy="19" r="1.4"/></svg>';
+function openInstallHelp(k) {
+  closeAll();
+  const steps = k === "ios" ? [
+      [SHARE_ICO, `Tap the <b>Share</b> button. In Safari it's at the bottom of the screen (top right on iPad). In Chrome it's in the address bar.`],
+      [ADD_ICO, `Scroll down and tap <b>Add to Home Screen</b>.`],
+      [ICON_V, `Tap <b>Add</b>. Ventua is now on your home screen. Open it from there.`]]
+    : k === "mac" ? [[MENU_ICO, `In the menu bar, choose <b>File → Add to Dock</b>.`], [ICON_V, `Click <b>Add</b>. Ventua opens from your Dock like any app.`]]
+    : [[MENU_ICO, `Open your browser menu <b>⋮</b>.`], [ADD_ICO, `Tap <b>Install app</b> or <b>Add to Home screen</b>.`], [ICON_V, `Open Ventua from your home screen.`]];
+  const scrim = document.createElement("div"); scrim.className = "scrim";
+  scrim.innerHTML = `<div class="aipanel install" role="dialog" aria-label="Install Ventua">
+    <img class="appicon" src="icons/icon-192.png" alt="" width="64" height="64">
+    <h2>Get the Ventua app</h2><p class="muted">It opens full-screen from your ${k === "mac" ? "Dock" : "home screen"}, works offline, and keeps your notes in sync.</p>
+    <ol class="isteps">${steps.map(([ic, t], i) => `<li><span class="n">${i + 1}</span><span class="ic">${ic}</span><span>${t}</span></li>`).join("")}</ol>
+    <div class="row"><span class="sp"></span><button class="btn primary" type="button">Got it</button></div></div>`;
+  document.body.appendChild(scrim);
+  const close = () => scrim.remove();
+  scrim.querySelector(".btn").onclick = close;
+  scrim.addEventListener("mousedown", e => { if (e.target === scrim) close(); });
+  scrim.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
+  scrim.querySelector(".btn").focus();
+}
+const ICON_V = '<svg class="svg" viewBox="0 0 32 32" style="stroke:none"><rect width="32" height="32" rx="8" fill="var(--ink)"/><path d="M10.5 11l5.5 10" stroke="var(--bg)" stroke-width="3" stroke-linecap="round" fill="none"/><path d="M16 21l5.5-10" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" fill="none"/></svg>';
+function installBanner() {
+  const k = installKind(); if (!k || installHidden()) return "";
+  return `<div class="exbar instbar" role="note"><img src="icons/icon-192.png" alt="" width="34" height="34"><span><b>Get the Ventua app.</b> Install it on your ${k === "mac" ? "Mac" : k === "prompt" && !/Android|iPhone|iPad/.test(UA) ? "computer" : "phone"} so it opens like an app, right from your ${k === "mac" || (k === "prompt" && !/Android/.test(UA)) ? "Dock or taskbar" : "home screen"}.</span><span class="sp"></span><button class="btn" type="button" id="inst-later">Not now</button><button class="btn primary" type="button" id="inst-go">${k === "prompt" ? "Install" : "Show me how"}</button></div>`;
+}
+
 // ---------- AI (optional: only where the viewer's Claude can be asked, and only on a click) ----------
 let AI = null, aiBlocked = false, aiOff = lsGet("ventua:ai") === "off";
 const aiReady = () => !!AI && !aiBlocked && !aiOff;
@@ -2073,6 +2165,7 @@ render();
 initCloud();
 initAI();
 initSupabase();
+initPWA();
 </script>
 </body>
 </html>
